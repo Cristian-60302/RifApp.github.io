@@ -24,6 +24,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Verify site entry point
+        shell: bash
+        run: |
+          test -f index.html || { echo "Error: index.html debe estar en la raíz del sitio"; exit 1; }
+          test -f styles.css || { echo "Error: falta styles.css"; exit 1; }
+          test -f app.js || { echo "Error: falta app.js"; exit 1; }
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
