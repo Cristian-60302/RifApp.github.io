@@ -1,0 +1,10 @@
+{
+  "name": "rifapp-cloud-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API de RifApp para Vercel y Neon",
+  "type": "module",
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2"
+  }
+}
