@@ -24,7 +24,7 @@ npx vercel
 Cuando Vercel pregunte, selecciona tu cuenta y confirma este directorio como proyecto. Luego configura las variables en **Project Settings > Environment Variables**:
 
 - `DATABASE_URL`: cadena de conexión de Neon.
-- `APP_ACCESS_KEY`: una clave privada larga creada por ti.
+- `APP_ACCESS_KEY`: actualiza esta variable en Vercel con la nueva clave que hayas elegido.
 - `APP_ORIGIN`: `https://cristian-60302.github.io`
 
 Después despliega a producción:
