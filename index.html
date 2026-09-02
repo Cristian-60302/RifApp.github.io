@@ -10,20 +10,6 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <section class="login-screen" id="loginScreen">
-    <div class="login-card">
-      <div class="login-mark">R</div>
-      <p class="eyebrow">Acceso privado</p>
-      <h1>Bienvenido a RifApp</h1>
-      <p>Ingresa tu contraseña para gestionar tus rifas y consultar la información guardada.</p>
-      <form id="loginForm">
-        <label for="loginPassword">Contraseña</label>
-        <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Escribe tu contraseña">
-        <button class="primary-button" type="submit">Ingresar <span>→</span></button>
-        <p class="login-message" id="loginMessage" role="alert"></p>
-      </form>
-    </div>
-  </section>
   <div class="app-shell">
     <aside class="sidebar">
       <a class="brand" href="#dashboard"><span class="brand-mark">R</span><span>RifApp</span></a>
@@ -37,7 +23,7 @@
     </aside>
 
     <main class="main-content">
-      <header class="topbar"><div><p class="eyebrow">Centro de control</p><h1 id="pageTitle">Inventario de boletas</h1></div><div class="top-actions"><span class="rifa-code" id="rifaCode">SIN RIFA</span><button class="icon-button" id="logoutButton" title="Cerrar sesión" aria-label="Cerrar sesión">⇥</button><button class="icon-button" id="resetButton" title="Restablecer datos" aria-label="Restablecer datos">↺</button></div></header>
+      <header class="topbar"><div><p class="eyebrow">Centro de control</p><h1 id="pageTitle">Inventario de boletas</h1></div><div class="top-actions"><span class="rifa-code" id="rifaCode">SIN RIFA</span><button class="icon-button" id="resetButton" title="Restablecer datos" aria-label="Restablecer datos">↺</button></div></header>
 
       <section class="view active" id="dashboardView">
         <div class="event-banner"><div><span class="banner-kicker">Rifa activa</span><h2 id="dashboardRifaName">Gran Rifa Solidaria</h2><p><span id="dashboardReference">Lotería de Boyacá</span> · juega el <strong id="dashboardDate">--</strong></p></div><button class="outline-button" data-view="setup">Editar configuración</button></div>
