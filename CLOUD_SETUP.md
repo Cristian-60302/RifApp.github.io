@@ -39,6 +39,20 @@ La API quedará en:
 https://TU-PROYECTO.vercel.app/api/raffles
 ```
 
+Para este proyecto, la URL configurada actualmente en el frontend es:
+
+```text
+https://rif-app-github-io-ixxu.vercel.app/api/raffles
+```
+
 ## Importante
 
-No pongas `DATABASE_URL` en `index.html`, `app.js`, GitHub Actions ni variables públicas del frontend. GitHub Pages no debe conectarse directamente a Neon. El endpoint requiere `X-App-Key`; para que el frontend de GitHub Pages sincronice automáticamente, hay que configurar la URL de Vercel y un flujo de acceso para el usuario.
+No pongas `DATABASE_URL` en `index.html`, `app.js`, GitHub Actions ni variables públicas del frontend. GitHub Pages no debe conectarse directamente a Neon. El endpoint requiere `X-App-Key`; el frontend solicita esa clave en el navegador y la guarda en el `localStorage` del dispositivo.
+
+Después de actualizar `app.js`, publica la versión del frontend en GitHub Pages:
+
+```bash
+git add app.js CLOUD_SETUP.md
+git commit -m "Conectar RifApp con API cloud"
+git push
+```

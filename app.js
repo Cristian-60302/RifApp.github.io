@@ -1,7 +1,10 @@
 const STORAGE_KEY = 'rifapp-collections-v1';
+const ACCESS_KEY_STORAGE = 'rifapp-cloud-access-key';
+const API_URL = 'https://rif-app-github-io-ixxu.vercel.app/api/raffles';
 const emptyStore = { raffles: [], activeRaffleId: null };
 let store = loadStore();
 let selectedNumber = null;
+let cloudSyncInProgress = false;
 
 const $ = (selector) => document.querySelector(selector);
 const money = (value) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(Number(value) || 0);
@@ -11,7 +14,35 @@ const ruleLabels = { last2: 'Dos últimas cifras', first2: 'Dos primeras cifras'
 function loadStore() {
   try { return { ...emptyStore, ...JSON.parse(localStorage.getItem(STORAGE_KEY)) }; } catch { return structuredClone(emptyStore); }
 }
-function saveStore() { localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }
+function saveStore(forceCloud = false) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+  syncStoreToCloud(forceCloud);
+}
+function getAccessKey() { return localStorage.getItem(ACCESS_KEY_STORAGE) || window.prompt('Ingresa tu APP_ACCESS_KEY para sincronizar RifApp:'); }
+function rememberAccessKey(key) { if (key) localStorage.setItem(ACCESS_KEY_STORAGE, key.trim()); return key?.trim(); }
+async function syncStoreToCloud(forceCloud = false) {
+  if (cloudSyncInProgress || (!store.raffles.length && !forceCloud)) return;
+  const key = rememberAccessKey(getAccessKey());
+  if (!key) return;
+  cloudSyncInProgress = true;
+  try {
+    const response = await fetch(API_URL, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-App-Key': key }, body: JSON.stringify(store) });
+    if (response.status === 401) { localStorage.removeItem(ACCESS_KEY_STORAGE); window.alert('La APP_ACCESS_KEY no es válida.'); }
+    if (!response.ok) throw new Error(`Cloud save failed: ${response.status}`);
+  } catch (error) { console.error(error); }
+  cloudSyncInProgress = false;
+}
+async function syncStoreFromCloud() {
+  const key = rememberAccessKey(getAccessKey());
+  if (!key) return;
+  try {
+    const response = await fetch(API_URL, { headers: { 'X-App-Key': key } });
+    if (response.status === 401) { localStorage.removeItem(ACCESS_KEY_STORAGE); window.alert('La APP_ACCESS_KEY no es válida.'); return; }
+    if (!response.ok) throw new Error(`Cloud load failed: ${response.status}`);
+    const cloudStore = await response.json();
+    if (Array.isArray(cloudStore.raffles)) { store = cloudStore; localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); renderDashboard(); renderHeader(); }
+  } catch (error) { console.error(error); }
+}
 function activeRaffle() { return store.raffles.find((raffle) => raffle.id === store.activeRaffleId) || null; }
 function activeTickets() { return activeRaffle()?.tickets || {}; }
 function ticket(number) { return activeTickets()[number] || { status: 'available', customer: '', paid: 0 }; }
@@ -52,5 +83,5 @@ function switchView(viewName) { document.querySelectorAll('.view').forEach((view
 
 document.querySelectorAll('[data-view]').forEach((button) => button.addEventListener('click', () => switchView(button.dataset.view)));
 $('#raffleForm').addEventListener('submit', saveSetup); $('#addPrizeButton').addEventListener('click', () => { const prizes = readPrizes(); prizes.push({ name: `Premio ${prizes.length + 1}`, rule: 'last2', amount: 0 }); renderPrizes(prizes); }); $('#verifyButton').addEventListener('click', verifyResult);
-$('#resetButton').addEventListener('click', () => { if (window.confirm('¿Borrar todas las rifas creadas?')) { store = structuredClone(emptyStore); saveStore(); selectedNumber = null; switchView('dashboard'); } });
-renderDashboard(); renderHeader();
+$('#resetButton').addEventListener('click', () => { if (window.confirm('¿Borrar todas las rifas creadas?')) { store = structuredClone(emptyStore); saveStore(true); selectedNumber = null; switchView('dashboard'); } });
+renderDashboard(); renderHeader(); syncStoreFromCloud();
