@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RifApp | Gestión de rifas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#dashboard"><span class="brand-mark">R</span><span>RifApp</span></a>
+      <p class="side-label">Operación</p>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <button class="nav-item active" data-view="dashboard"><span>▦</span> Dashboard</button>
+        <button class="nav-item" data-view="setup"><span>＋</span> Nueva rifa</button>
+        <button class="nav-item" data-view="settlement"><span>✓</span> Liquidación</button>
+      </nav>
+      <div class="sidebar-bottom"><div class="live-indicator"><span></span> Sistema activo</div><small>RifApp / 2026</small></div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar"><div><p class="eyebrow">Centro de control</p><h1 id="pageTitle">Inventario de boletas</h1></div><div class="top-actions"><span class="rifa-code" id="rifaCode">RIFA-001</span><button class="icon-button" id="resetButton" title="Restablecer datos" aria-label="Restablecer datos">↺</button></div></header>
+
+      <section class="view active" id="dashboardView">
+        <div class="event-banner"><div><span class="banner-kicker">Rifa activa</span><h2 id="dashboardRifaName">Gran Rifa Solidaria</h2><p><span id="dashboardReference">Lotería de Boyacá</span> · juega el <strong id="dashboardDate">--</strong></p></div><button class="outline-button" data-view="setup">Editar configuración</button></div>
+        <div class="stats-grid"><article class="stat-card"><span>Disponibles</span><strong class="green-text" id="availableStat">100</strong><small>casillas libres</small></article><article class="stat-card"><span>Pagadas</span><strong class="blue-text" id="paidStat">0</strong><small>venta completada</small></article><article class="stat-card"><span>Pendientes</span><strong class="red-text" id="pendingStat">0</strong><small>con saldo por cobrar</small></article><article class="stat-card dark-stat"><span>Recaudo</span><strong id="revenueStat">$0</strong><small>de $0 proyectado</small></article></div>
+        <div class="dashboard-grid">
+          <section class="card grid-card"><div class="card-header"><div><p class="eyebrow">01 / Inventario</p><h2>Matriz de números <span class="subtle">00 — 99</span></h2></div><div class="legend"><span><i class="legend-dot available"></i>Disponible</span><span><i class="legend-dot paid"></i>Pagado</span><span><i class="legend-dot pending"></i>Pendiente</span></div></div><div class="number-grid" id="numberGrid"></div><p class="grid-help">Selecciona una casilla para registrar o actualizar su reserva.</p></section>
+          <aside class="card detail-card" id="ticketDetail"><div class="empty-detail"><span class="detail-symbol">⌁</span><h3>Selecciona un número</h3><p>Consulta el estado, asigna un cliente y registra sus abonos.</p></div></aside>
+        </div>
+      </section>
+
+      <section class="view" id="setupView"><div class="section-intro"><p class="eyebrow">Configuración / Nueva rifa</p><h2>Define las reglas del juego.</h2><p>Configura el evento, la persona responsable y los premios que se liquidarán con el resultado oficial.</p></div><form id="raffleForm" class="setup-form"><section class="card form-card"><div class="form-card-title"><span class="step-number">01</span><div><h3>Datos generales</h3><p>La información que verán tus operadores.</p></div></div><div class="form-grid"><label>Nombre de la rifa<input id="raffleName" required maxlength="70"></label><label>Fecha y hora de sorteo<input id="raffleDate" type="datetime-local" required></label><label>Lotería / referencia<input id="raffleReference" required></label><label>Valor por número<input id="ticketPrice" type="number" min="0" required></label><label>Responsable<input id="ownerName" required></label><label>Teléfono de contacto<input id="ownerPhone" type="tel" required></label></div></section><section class="card form-card"><div class="form-card-title"><span class="step-number">02</span><div><h3>Premiación flexible</h3><p>Relaciona cada premio con una posición de dos cifras.</p></div><button type="button" class="small-button" id="addPrizeButton">＋ Añadir premio</button></div><div id="prizesList"></div></section><div class="form-actions"><span id="setupMessage" role="status"></span><button class="primary-button" type="submit">Guardar configuración <span>→</span></button></div></form></section>
+
+      <section class="view" id="settlementView"><div class="section-intro"><p class="eyebrow">Liquidación / Resultado oficial</p><h2>Comprueba los números ganadores.</h2><p>Ingresa las cuatro cifras de la lotería de referencia y RifApp resolverá automáticamente cada combinación configurada.</p></div><section class="card result-card"><div><p class="eyebrow">Resultado de lotería</p><h3>Ingresa las 4 cifras</h3><p class="muted">Ejemplo: 1234 → primeras 12, medio 23, últimas 34.</p></div><div class="result-input-row"><input id="officialResult" inputmode="numeric" maxlength="4" placeholder="0000" aria-label="Resultado oficial de cuatro cifras"><button class="primary-button" id="verifyButton" type="button">Verificar ganadores <span>→</span></button></div></section><section class="card winners-card"><div class="card-header"><div><p class="eyebrow">Premios configurados</p><h2>Resultado de la liquidación</h2></div><span class="verified-badge" id="verifiedBadge">Pendiente</span></div><div class="winner-results" id="winnerResults"><div class="empty-detail"><span class="detail-symbol">✦</span><h3>Aún no hay liquidación</h3><p>El resultado de cada premio aparecerá aquí.</p></div></div></section></section>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
